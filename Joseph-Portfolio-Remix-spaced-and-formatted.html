@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="#f1eee6" name="theme-color"/>
+  <meta content="Joseph — a hands-on technologist, tutor, writer and music maker based in Kitengela, Kenya." name="description"/>
+  <title>
+   Joseph — Field Notes from a Curious Mind
+  </title>
+  <style>
+   @import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+      :root {
+        --paper: #f1eee6;
+        --ink: #1d2421;
+        --muted: #646e66;
+        --line: #c9cec4;
+        --blue: #3157e8;
+        --orange: #f06b3f;
+        --lime: #d7f36a;
+        --card: #e8e7dc;
+        --shadow: 0 18px 50px #1d242114;
+        --mono: "DM Mono", monospace;
+        --sans: "DM Sans", sans-serif;
+        --display: "Space Grotesk", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 84px;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        overflow-x: hidden;
+        position: relative;
+        transition:
+          background 0.35s ease,
+          color 0.35s ease;
+      }
+      /* Subtle analog paper grain texture */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 999;
+        opacity: 0.032;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+      body.dark {
+        --paper: #161b18;
+        --ink: #f1eee6;
+        --muted: #a3ada4;
+        --line: #38443d;
+        --blue: #8da2ff;
+        --orange: #ff926d;
+        --lime: #d7f36a;
+        --card: #202924;
+        --shadow: 0 18px 50px #0000004d;
+      }
+      body.dark::before {
+        opacity: 0.045;
+      }
+      ::selection {
+        background: var(--lime);
+        color: #1d2421;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+      }
+      .wrap {
+        width: min(1160px, calc(100% - 48px));
+        margin: auto;
+      }
+      .mono {
+        font: 11px var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* Topbar & Navigation */
+      .topbar {
+        height: 72px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: color-mix(in srgb, var(--paper) 88%, transparent);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        z-index: 50;
+      }
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: min(1160px, calc(100% - 48px));
+        margin: auto;
+      }
+      .brand {
+        font: 700 19px var(--display);
+        letter-spacing: -0.07em;
+        position: relative;
+        z-index: 60;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .brand-tag {
+        font: 400 10px var(--mono);
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      nav {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+      }
+      nav a {
+        font-size: 12px;
+        color: var(--muted);
+        position: relative;
+        transition: color 0.2s;
+      }
+      nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 1.5px;
+        background: var(--orange);
+        transition: width 0.25s ease;
+      }
+      nav a:hover {
+        color: var(--ink);
+      }
+      nav a:hover::after {
+        width: 100%;
+      }
+      .theme {
+        border: 1px solid var(--line);
+        background: none;
+        border-radius: 99px;
+        padding: 8px 13px;
+        font: 11px var(--mono);
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .theme:hover {
+        border-color: var(--ink);
+      }
+
+      /* Hamburger Button */
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        position: relative;
+        z-index: 60;
+      }
+      .menu-toggle span {
+        display: block;
+        width: 16px;
+        height: 1.5px;
+        background: var(--ink);
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+      .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+      }
+      .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+      }
+      .menu-toggle[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg);
+      }
+
+      /* Hero */
+      .hero {
+        padding: 82px 0 64px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 50px;
+        align-items: end;
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 26px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        flex-shrink: 0;
+        background: var(--orange);
+        border-radius: 50%;
+        box-shadow: 0 0 0 5px color-mix(in srgb, var(--orange) 18%, transparent);
+        animation: pulse 2.8s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% {
+          box-shadow: 0 0 0 4px color-mix(in srgb, var(--orange) 22%, transparent);
+        }
+        50% {
+          box-shadow: 0 0 0 8px color-mix(in srgb, var(--orange) 6%, transparent);
+        }
+      }
+      h1 {
+        font: 600 clamp(46px, 8.5vw, 118px)/0.9 var(--display);
+        letter-spacing: -0.085em;
+        margin: 0;
+        max-width: 780px;
+      }
+      h1 em {
+        font-style: italic;
+        font-weight: 500;
+        color: var(--blue);
+        padding-right: 0.06em;
+      }
+      .hero-note {
+        font-size: clamp(15px, 1.5vw, 17px);
+        line-height: 1.65;
+        max-width: 410px;
+        color: var(--muted);
+        margin: 0 0 8px;
+      }
+      .hero-note strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .hero-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 64px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        gap: 16px;
+      }
+      .hero-bottom .scroll {
+        font: 11px var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .hero-bottom .coords {
+        font: 11px var(--mono);
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .stamp {
+        position: absolute;
+        right: 8%;
+        top: 64px;
+        width: 118px;
+        height: 118px;
+        border: 1px solid var(--orange);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: var(--orange);
+        font: 10px/1.4 var(--mono);
+        transform: rotate(12deg);
+        transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: default;
+        user-select: none;
+      }
+      .stamp:hover {
+        transform: rotate(-8deg) scale(1.06);
+      }
+      .stamp:before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border: 1px dashed var(--orange);
+        border-radius: 50%;
+      }
+
+      /* Marquee */
+      .marquee {
+        background: var(--blue);
+        color: white;
+        overflow: hidden;
+        padding: 13px 0;
+        transform: rotate(-1.1deg) scale(1.02);
+        margin: 5px 0 65px;
+      }
+      .marquee:hover .marquee-track {
+        animation-play-state: paused;
+      }
+      .marquee-track {
+        white-space: nowrap;
+        display: flex;
+        gap: 26px;
+        width: max-content;
+        animation: drift 32s linear infinite;
+        font: 12px var(--mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .marquee b {
+        color: var(--lime);
+        font-weight: 500;
+      }
+      @keyframes drift {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* Sections */
+      .section {
+        padding: 68px 0;
+        border-top: 1px solid var(--line);
+      }
+      .section-head {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 30px;
+        margin-bottom: 42px;
+      }
+      .section-no {
+        padding-top: 9px;
+      }
+      .section-title {
+        font: 600 clamp(30px, 5vw, 58px)/1.02 var(--display);
+        letter-spacing: -0.065em;
+        margin: 0;
+      }
+      .section-intro {
+        max-width: 620px;
+        color: var(--muted);
+        line-height: 1.7;
+        margin: 15px 0 0;
+        font-size: clamp(14px, 1.4vw, 15px);
+      }
+
+      /* About */
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .manifesto {
+        background: var(--blue);
+        color: white;
+        padding: 34px;
+        min-height: 270px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .manifesto::after {
+        content: "“";
+        position: absolute;
+        right: 22px;
+        bottom: -36px;
+        font: 700 180px/1 var(--display);
+        color: #ffffff12;
+        pointer-events: none;
+      }
+      .manifesto blockquote {
+        font: 500 clamp(22px, 3.3vw, 39px)/1.18 var(--display);
+        letter-spacing: -0.05em;
+        margin: 26px 0;
+        position: relative;
+        z-index: 1;
+      }
+      .manifesto .mono {
+        color: #dbe1ff;
+        position: relative;
+        z-index: 1;
+      }
+      .facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+      .fact {
+        padding: 22px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        min-height: 135px;
+        transition: background 0.25s ease;
+      }
+      .fact:hover {
+        background: color-mix(in srgb, var(--card) 55%, transparent);
+      }
+      .fact strong {
+        display: block;
+        font: 500 clamp(15px, 1.6vw, 17px) var(--display);
+        margin: 12px 0 5px;
+      }
+      .fact p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      /* Timeline */
+      .timeline {
+        border-top: 1px solid var(--line);
+      }
+      .time-row {
+        display: grid;
+        grid-template-columns: 180px 1fr 1fr;
+        gap: 25px;
+        padding: 23px 12px;
+        border-bottom: 1px solid var(--line);
+        align-items: start;
+        transition:
+          background 0.25s ease,
+          padding-left 0.25s ease;
+      }
+      .time-row:hover {
+        background: color-mix(in srgb, var(--card) 50%, transparent);
+        padding-left: 18px;
+      }
+      .time-row h3 {
+        font: 500 clamp(18px, 2vw, 20px) var(--display);
+        letter-spacing: -0.04em;
+        margin: 0;
+      }
+      .time-row p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.65;
+      }
+      .time-tag {
+        font: 10px var(--mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--orange);
+        padding-top: 3px;
+      }
+
+      /* Projects */
+      .project-tools {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 18px;
+      }
+      .filters {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+      .filter {
+        border: 1px solid var(--line);
+        background: transparent;
+        border-radius: 99px;
+        padding: 8px 14px;
+        font: 10px var(--mono);
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s;
+      }
+      .filter.active,
+      .filter:hover {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+      .project-count {
+        font: 11px var(--mono);
+        color: var(--muted);
+      }
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 13px;
+      }
+      .project {
+        grid-column: span 2;
+        background: var(--card);
+        border: 1px solid var(--line);
+        min-height: 245px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .project:nth-child(1),
+      .project:nth-child(4) {
+        grid-column: span 3;
+      }
+      .project:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+      }
+      .project:hover .project-mark {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+        transform: rotate(12deg);
+      }
+      .project[hidden] {
+        display: none;
+      }
+      .project-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .project-type {
+        font: 10px var(--mono);
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .project-index {
+        font: 10px var(--mono);
+        color: var(--orange);
+      }
+      .project h3 {
+        font: 600 clamp(22px, 2.6vw, 32px)/1.1 var(--display);
+        letter-spacing: -0.05em;
+        margin: 24px 0 9px;
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+      .project p {
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--muted);
+        max-width: 430px;
+        margin: 0;
+      }
+      .project-links-inline a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .project-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 28px;
+        gap: 12px;
+      }
+      .stack {
+        font: 10px var(--mono);
+        color: var(--muted);
+      }
+      .project-mark {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--blue);
+        font-size: 17px;
+        transition:
+          background 0.25s,
+          color 0.25s,
+          transform 0.25s;
+      }
+      .project:nth-child(2) {
+        background: #dce5f5;
+        color: #1d2421;
+      }
+      .project:nth-child(2) p,
+      .project:nth-child(2) .stack {
+        color: #52617a;
+      }
+      .project:nth-child(3) {
+        background: #f1d9cc;
+        color: #1d2421;
+      }
+      .project:nth-child(3) p,
+      .project:nth-child(3) .stack {
+        color: #77574c;
+      }
+      .project:nth-child(4) {
+        background: var(--lime);
+        color: #1d2421;
+      }
+      .project:nth-child(4) p,
+      .project:nth-child(4) .stack {
+        color: #52602b;
+      }
+
+      /* Creatives / Sound & Writing */
+      .creative-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .music-panel {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 38px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 32px;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .music-panel:after {
+        content: "";
+        position: absolute;
+        width: 340px;
+        height: 340px;
+        border: 1px solid #ffffff24;
+        border-radius: 50%;
+        right: -90px;
+        top: -120px;
+        box-shadow:
+          0 0 0 30px #ffffff08,
+          0 0 0 60px #ffffff05;
+        pointer-events: none;
+      }
+      .music-panel h3 {
+        font: 600 clamp(38px, 6.5vw, 76px)/0.92 var(--display);
+        letter-spacing: -0.07em;
+        margin: 16px 0;
+      }
+      .music-panel p {
+        color: #c2cbc2;
+        line-height: 1.7;
+        max-width: 520px;
+        font-size: 14px;
+      }
+      .creative-meta {
+        font: 10px var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--lime);
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+      .creative-meta a:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      /* Interactive Vinyl + Equalizer */
+      .sound-orbit {
+        height: 240px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        gap: 16px;
+      }
+      .disc {
+        width: 186px;
+        height: 186px;
+        border: 1px solid #ffffff88;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        position: relative;
+        cursor: pointer;
+        background: repeating-radial-gradient(
+          circle,
+          transparent 0 10px,
+          #ffffff1a 11px 12px
+        );
+        transition: transform 0.3s ease, border-color 0.3s ease;
+      }
+      .disc:hover,
+      .disc.spinning {
+        border-color: var(--lime);
+        animation: spinDisc 6s linear infinite;
+      }
+      @keyframes spinDisc {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .disc:before {
+        content: "";
+        position: absolute;
+        inset: 30px;
+        border: 1px solid #ffffff77;
+        border-radius: 50%;
+      }
+      .disc:after {
+        content: "";
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--orange);
+        box-shadow: 0 0 0 6px #1d2421;
+      }
+      .eq-bar-wrap {
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 18px;
+      }
+      .eq-bar {
+        width: 3px;
+        height: 6px;
+        background: var(--lime);
+        border-radius: 2px;
+        animation: eqBounce 1.1s ease-in-out infinite alternate;
+      }
+      .eq-bar:nth-child(2) {
+        animation-delay: 0.2s;
+        height: 14px;
+      }
+      .eq-bar:nth-child(3) {
+        animation-delay: 0.4s;
+        height: 10px;
+      }
+      .eq-bar:nth-child(4) {
+        animation-delay: 0.15s;
+        height: 16px;
+      }
+      .eq-bar:nth-child(5) {
+        animation-delay: 0.35s;
+        height: 8px;
+      }
+      @keyframes eqBounce {
+        0% {
+          height: 4px;
+        }
+        100% {
+          height: 18px;
+        }
+      }
+      .disc-caption {
+        font: 10px var(--mono);
+        color: var(--lime);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Interactive Literary Slip (Josephlol) */
+      .writing-panel {
+        background: var(--card);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .writing-panel p {
+        color: var(--muted);
+      }
+      .writing-panel .creative-meta {
+        color: var(--blue);
+      }
+      .manuscript-card {
+        background: var(--paper);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        padding: 26px;
+        position: relative;
+        z-index: 1;
+        transform: rotate(1.2deg);
+        box-shadow: var(--shadow);
+        transition: transform 0.25s ease;
+      }
+      .manuscript-card:hover {
+        transform: rotate(0deg);
+      }
+      .manuscript-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 10px;
+        margin-bottom: 16px;
+      }
+      .manuscript-quote {
+        font: italic 15px/1.65 var(--sans);
+        margin: 0 0 18px;
+        min-height: 75px;
+      }
+      .next-excerpt {
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        padding: 6px 12px;
+        font: 10px var(--mono);
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .next-excerpt:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      /* Contact */
+      .contact {
+        background: var(--orange);
+        padding: 44px;
+        color: #1d2421;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 35px;
+      }
+      .contact h2 {
+        font: 600 clamp(38px, 6.5vw, 82px)/0.9 var(--display);
+        letter-spacing: -0.08em;
+        margin: 20px 0;
+      }
+      .contact p {
+        max-width: 360px;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+      .contact-links {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .contact-link {
+        padding: 16px 0;
+        border-bottom: 1px solid #1d242155;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font: 500 16px var(--display);
+        transition: padding-left 0.2s ease;
+      }
+      .contact-link span {
+        font: 10px var(--mono);
+        text-transform: uppercase;
+      }
+      .contact-link:hover {
+        padding-left: 10px;
+      }
+
+      /* Footer */
+      footer {
+        padding: 24px 0 35px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px 20px;
+        color: var(--muted);
+        font: 10px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .back {
+        color: var(--blue);
+      }
+
+      /* Reveal Animation */
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.65s ease,
+          transform 0.65s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Dark-mode readability fixes */
+      body.dark .project:nth-child(2),
+      body.dark .project:nth-child(3),
+      body.dark .project:nth-child(4) {
+        background: var(--card);
+        color: var(--ink);
+      }
+      body.dark .project:nth-child(2) p,
+      body.dark .project:nth-child(2) .stack,
+      body.dark .project:nth-child(3) p,
+      body.dark .project:nth-child(3) .stack,
+      body.dark .project:nth-child(4) p,
+      body.dark .project:nth-child(4) .stack {
+        color: var(--muted);
+      }
+      body.dark .music-panel:not(.writing-panel) {
+        background: var(--card);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      body.dark .music-panel:not(.writing-panel) p {
+        color: #c4cec5;
+      }
+      body.dark .contact .mono,
+      body.dark .contact {
+        color: #1d2421 !important;
+      }
+
+      /* Tablet Breakpoint (<= 960px) */
+      @media (max-width: 960px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .stamp {
+          width: 96px;
+          height: 96px;
+          font-size: 9px;
+          right: 4%;
+          top: 56px;
+        }
+        .section-head {
+          grid-template-columns: 140px 1fr;
+          gap: 20px;
+        }
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+        .projects {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .project,
+        .project:nth-child(1),
+        .project:nth-child(4) {
+          grid-column: span 1;
+        }
+      }
+
+      /* Mobile Breakpoint & Hamburger Menu (<= 760px) */
+      @media (max-width: 760px) {
+        .wrap,
+        .topbar-inner {
+          width: calc(100% - 32px);
+        }
+        .topbar {
+          height: 64px;
+        }
+        .brand-tag {
+          display: none;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        nav {
+          position: fixed;
+          top: 64px;
+          left: 0;
+          right: 0;
+          background: var(--paper);
+          border-bottom: 1px solid var(--line);
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0;
+          padding: 8px 16px 20px;
+          box-shadow: var(--shadow);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition:
+            opacity 0.25s ease,
+            transform 0.25s ease,
+            visibility 0.25s;
+          z-index: 45;
+        }
+        nav.open {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        nav a {
+          width: 100%;
+          padding: 14px 4px;
+          font-size: 15px;
+          font-family: var(--display);
+          font-weight: 500;
+          color: var(--ink);
+          border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
+        }
+        nav a::after {
+          display: none;
+        }
+        nav a:last-child {
+          border-bottom: none;
+        }
+        .hero {
+          padding: 52px 0 42px;
+        }
+        .eyebrow {
+          font-size: 10px;
+          margin-bottom: 18px;
+          max-width: calc(100% - 88px);
+        }
+        .stamp {
+          width: 78px;
+          height: 78px;
+          right: 0;
+          top: 38px;
+          font-size: 7.5px;
+        }
+        .hero-bottom {
+          margin-top: 42px;
+        }
+        .section {
+          padding: 48px 0;
+        }
+        .section-head {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          margin-bottom: 26px;
+        }
+        .manifesto {
+          padding: 26px;
+          min-height: 210px;
+        }
+        .time-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 18px 0;
+        }
+        .time-row:hover {
+          padding-left: 8px;
+        }
+        .music-panel {
+          grid-template-columns: 1fr;
+          padding: 26px;
+          gap: 24px;
+        }
+        .sound-orbit {
+          height: auto;
+          padding: 10px 0;
+        }
+        .disc {
+          width: 156px;
+          height: 156px;
+        }
+        .manuscript-card {
+          transform: none;
+        }
+        .contact {
+          grid-template-columns: 1fr;
+          padding: 28px;
+          gap: 24px;
+        }
+        .project-tools {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .marquee {
+          margin-bottom: 36px;
+          padding: 10px 0;
+        }
+        .marquee-track {
+          font-size: 11px;
+        }
+      }
+
+      /* Small Mobile Breakpoint (<= 480px) */
+      @media (max-width: 480px) {
+        .brand {
+          font-size: 17px;
+        }
+        .theme {
+          padding: 6px 10px;
+          font-size: 10px;
+        }
+        .stamp {
+          width: 68px;
+          height: 68px;
+          font-size: 6.5px;
+          top: 34px;
+        }
+        .stamp:before {
+          inset: 5px;
+        }
+        h1 {
+          font-size: clamp(42px, 13.5vw, 64px);
+        }
+        .hero-note {
+          font-size: 14.5px;
+        }
+        .hero-bottom .coords {
+          display: none;
+        }
+        .facts {
+          grid-template-columns: 1fr;
+        }
+        .fact {
+          padding: 18px;
+          min-height: auto;
+        }
+        .projects {
+          grid-template-columns: 1fr;
+        }
+        .project {
+          min-height: 210px;
+          padding: 18px;
+        }
+        .project h3 {
+          font-size: 22px;
+          margin: 18px 0 8px;
+        }
+        .contact {
+          padding: 22px;
+        }
+        .contact-link {
+          font-size: 14px;
+          padding: 14px 0;
+        }
+        footer {
+          flex-direction: column;
+          align-items: flex-start;
+          font-size: 9px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *:before,
+        *:after {
+          scroll-behavior: auto !important;
+          animation: none !important;
+          transition: none !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+  </style>
+ </head>
+ <body>
+  <header class="topbar">
+   <div class="topbar-inner">
+    <a class="brand" href="#top">
+     JOSEPH K<span>.</span>
+     <span class="brand-tag">// FIELD NOTES</span>
+    </a>
+    <nav aria-label="Main navigation" id="mainNav">
+     <a href="#about">
+      About Me
+     </a>
+     <a href="#experience">
+      Experience
+     </a>
+     <a href="#work">
+      Work
+     </a>
+     <a href="#sound">
+      Creatives
+     </a>
+     <a href="#contact">
+      Contact
+     </a>
+    </nav>
+    <div class="nav-actions">
+     <button aria-label="Toggle dark mode" class="theme" id="themeToggle">
+      ◐ Theme
+     </button>
+     <button aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation menu" class="menu-toggle" id="menuToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+     </button>
+    </div>
+   </div>
+  </header>
+  <main id="top">
+   <section class="hero wrap">
+    <div class="stamp" title="Field Stamp #01">
+     CURIOUS
+     <br/>
+     BY NATURE
+     <br/>
+     BUILT BY DOING
+    </div>
+    <div class="hero-grid">
+     <div>
+      <div class="eyebrow mono">
+       <i class="dot">
+       </i>
+       Aspiring Tech Person · Kitengela, Kenya
+      </div>
+      <h1>
+       I make things
+       <br/>
+       <em>
+        work
+       </em>
+       .
+      </h1>
+     </div>
+     <p class="hero-note">
+      <strong>
+       Technologist. Tutor. Music maker. Creative Writer
+      </strong>
+      <br/>
+      I move between fixing technology, building useful software, writing
+      creative pieces, helping people learn, and making sounds. Different
+      disciplines. One instinct: stay curious and make something useful.
+     </p>
+    </div>
+    <div class="hero-bottom">
+     <span class="scroll">
+      ↓ Scroll through my work
+     </span>
+     <span class="coords">
+      <span>01°28′S 36°57′E</span>
+      <span>·</span>
+      <span id="localTime">KITENGELA, EAT</span>
+     </span>
+    </div>
+   </section>
+   <div aria-hidden="true" class="marquee">
+    <div class="marquee-track">
+     <span>
+      Curiosity is a tool
+      <b>
+       ✳
+      </b>
+      Learn by making
+      <b>
+       ✳
+      </b>
+      Build for people
+      <b>
+       ✳
+      </b>
+      Technology with a human side
+      <b>
+       ✳
+      </b>
+      Curiosity is a tool
+      <b>
+       ✳
+      </b>
+      Learn by making
+      <b>
+       ✳
+      </b>
+      Build for people
+      <b>
+       ✳
+      </b>
+      Technology with a human side
+      <b>
+       ✳
+      </b>
+     </span>
+    </div>
+   </div>
+   <section class="section wrap" id="about">
+    <div class="section-head">
+     <div class="section-no mono">
+      01 / The person
+     </div>
+     <div>
+      <h2 class="section-title">
+       A little context
+       <br/>
+       before the code.
+      </h2>
+      <p class="section-intro">
+       I'm studying for a Diploma in Information Technology at KCA
+       University. My learning doesn't stop at the classroom door: I
+       explore software, study hardware and networks, tutor students, and
+       write creative pieces. I like understanding how things work — and
+       finding ways to make them work better for someone else.
+      </p>
+     </div>
+    </div>
+    <div class="about-grid reveal">
+     <div class="manifesto">
+      <span class="mono">
+       A working principle
+      </span>
+      <blockquote>
+       “The best way to understand a thing is to get your hands on it.”
+      </blockquote>
+      <span class="mono">
+       Curiosity → practice → useful things
+      </span>
+     </div>
+     <div class="facts">
+      <div class="fact">
+       <span class="mono">
+        Based in
+       </span>
+       <strong>
+        Kitengela
+       </strong>
+       <p>
+        Kajiado County, Kenya
+       </p>
+      </div>
+      <div class="fact">
+       <span class="mono">
+        Currently
+       </span>
+       <strong>
+        Diploma in Information Technology
+       </strong>
+       <p>
+        KCA University
+       </p>
+      </div>
+      <div class="fact">
+       <span class="mono">
+        I work around
+       </span>
+       <strong>
+        IT &amp; software
+       </strong>
+       <p>
+        Support, hardware and networking
+       </p>
+      </div>
+      <div class="fact">
+       <span class="mono">
+        Outside the lab
+       </span>
+       <strong>
+        Teaching &amp; Creative works
+       </strong>
+       <p>
+        Private tutoring, writing and aspiring music production
+       </p>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="section wrap" id="experience">
+    <div class="section-head">
+     <div class="section-no mono">
+      02 / The practice
+     </div>
+     <div>
+      <h2 class="section-title">
+       Learning in the
+       <br/>
+       real world.
+      </h2>
+      <p class="section-intro">
+       A mix of practical experience, ongoing study and things I'm
+       deliberately working towards. No inflated titles — just the work
+       and the direction.
+      </p>
+     </div>
+    </div>
+    <div class="timeline reveal">
+     <div class="time-row">
+      <div class="time-tag">
+       Hands-on
+      </div>
+      <h3>
+       IT support
+      </h3>
+      <p>
+       Practical IT support experience at various locations.
+      </p>
+     </div>
+     <div class="time-row">
+      <div class="time-tag">
+       Core focus
+      </div>
+      <h3>
+       Software &amp; hardware
+      </h3>
+      <p>
+       My main career interest: working with software and computer
+       hardware, and continuing to deepen that practical foundation.
+      </p>
+     </div>
+     <div class="time-row">
+      <div class="time-tag">
+       Teaching
+      </div>
+      <h3>
+       Private tutoring
+      </h3>
+      <p>
+       I plan lessons and create learning materials, including holiday
+       homework planners, physics resources and a structured programme
+       for IGCSE and CBC/CBE learners.
+      </p>
+     </div>
+     <div class="time-row">
+      <div class="time-tag">
+       In progress
+      </div>
+      <h3>
+       Diploma in Information Technology
+      </h3>
+      <p>
+       KCA University, Kitengela. Continuing to build the formal and
+       practical foundations of my work.
+      </p>
+     </div>
+    </div>
+   </section>
+   <section class="section wrap" id="work">
+    <div class="section-head">
+     <div class="section-no mono">
+      03 / Things made
+     </div>
+     <div>
+      <h2 class="section-title">
+       Small experiments.
+       <br/>
+       Useful outcomes.
+      </h2>
+      <p class="section-intro">
+       A selection of builds across education, music, productivity and
+       everyday software. Some are further along than others; the status
+       is part of the story.
+      </p>
+     </div>
+    </div>
+    <div class="project-tools">
+     <div aria-label="Filter projects" class="filters" role="group">
+      <button class="filter active" data-filter="all">
+       All work
+      </button>
+      <button class="filter" data-filter="education">
+       Education
+      </button>
+      <button class="filter" data-filter="music">
+       Music
+      </button>
+      <button class="filter" data-filter="tools">
+       Tools
+      </button>
+      <button class="filter" data-filter="web">
+       Web
+      </button>
+     </div>
+     <span class="project-count" id="projectCount">
+      06 projects / selected work
+     </span>
+    </div>
+    <div class="projects reveal" id="projectGrid">
+     <article class="project" data-category="music">
+      <div class="project-top">
+       <span class="project-type">
+        01 / LINUX/Windows · Tauri
+       </span>
+       <span class="project-index">
+        AUDIO
+       </span>
+      </div>
+      <div>
+       <h3>
+        Koda
+       </h3>
+       <p>
+        An offline music player with mood-tagged playlists, favourites,
+        multi-select and a visualizer — designed around listening
+        without needing a connection.
+       </p>
+      </div>
+      <div class="project-foot">
+       <span class="stack">
+        OFFLINE · PLAYLISTS · IN PROGRESS
+       </span>
+       <a aria-label="View Koda on GitHub" href="https://github.com/Jos3456/KODA-v2" target="_blank">
+        <span class="project-mark">
+         ↗
+        </span>
+       </a>
+      </div>
+     </article>
+     <article class="project" data-category="tools">
+      <div class="project-top">
+       <span class="project-type">
+        02 / Tools · PWA
+       </span>
+       <span class="project-index">
+        NOTES
+       </span>
+      </div>
+      <div>
+       <h3>
+        Noted-app
+       </h3>
+       <p>
+        A simple note taking app inspired by Google Keep. It has a clean interface, offline support and a PWA build.
+       </p>
+      </div>
+      <div class="project-foot">
+       <span class="stack">
+        PWA · UI DESIGN · FINAL PHASE
+       </span>
+       <a aria-label="View Noted-app on GitHub" href="https://github.com/Jos3456/Noted-app" target="_blank">
+        <span class="project-mark">
+         ↗
+        </span>
+       </a>
+      </div>
+     </article>
+     <article class="project" data-category="education">
+      <div class="project-top">
+       <span class="project-type">
+        03 / Learning · Curriculum
+       </span>
+       <span class="project-index">
+        STUDY
+       </span>
+      </div>
+      <div>
+       <h3>
+        BEMS — Bright Education Management System
+       </h3>
+       <p>
+        Connect with expert teachers, discover quality learning resources, attend live online lessons and explore virtual laboratories—all in one welcoming learning platform.
+       </p>
+      </div>
+      <div class="project-foot">
+       <span class="stack">
+        SINGLE-FILE WEBSITE · IN PROGRESS
+       </span>
+       <a aria-label="View BEMS on GitHub" href="https://github.com/Jos3456/BEMS---BRIGHT-Education-Management-System" target="_blank">
+        <span class="project-mark">
+         ↗
+        </span>
+       </a>
+      </div>
+     </article>
+     <article class="project" data-category="tools">
+      <div class="project-top">
+       <span class="project-type">
+        04 / Tools · Full stack
+       </span>
+       <span class="project-index">
+        CALCULATIONS
+       </span>
+      </div>
+      <div>
+       <h3>
+        Unicalc
+       </h3>
+       <p>
+        A multi-functional calculator app for Windows and Linux.
+       </p>
+      </div>
+      <div class="project-foot">
+       <span class="stack">
+        REACT · TYPESCRIPT · SUPABASE
+       </span>
+       <a aria-label="View Unicalc on GitHub" href="https://github.com/Jos3456/unicalc" target="_blank">
+        <span class="project-mark">
+         ↗
+        </span>
+       </a>
+      </div>
+     </article>
+     <article class="project" data-category="web">
+      <div class="project-top">
+       <span class="project-type">
+        05 / Business · Web
+       </span>
+       <span class="project-index">
+        EDUCATION
+       </span>
+      </div>
+      <div>
+       <h3>
+        <a href="https://cloud-classroom.netlify.app/" target="_blank">
+         Cloud Classroom
+        </a>
+       </h3>
+       <p>
+        My personal webpage for my tutoring service.
+       </p>
+      </div>
+      <div class="project-foot">
+       <span class="stack">
+        HTML · CSS · JavaScript
+       </span>
+       <a aria-label="Visit Cloud Classroom" href="https://cloud-classroom.netlify.app/#home" target="_blank">
+        <span class="project-mark">
+         ↗
+        </span>
+       </a>
+      </div>
+     </article>
+     <article class="project" data-category="tools">
+      <div class="project-top">
+       <span class="project-type">
+        06 / Desktop · NodeJS
+       </span>
+       <span class="project-index">
+        LIBRARIES
+       </span>
+      </div>
+      <div>
+       <h3>
+        Envforge
+       </h3>
+       <p class="project-links-inline">
+        A Node.js library tool for managing .env files.
+        <br/>
+        →
+        <a href="https://www.npmjs.com/package/envforge-dev" target="_blank">
+         NPM
+        </a>
+        ·
+        <a href="https://github.com/Jos3456/Envforge" target="_blank">
+         GitHub
+        </a>
+        ·
+        <a href="https://dev.to/joseph_kariuki_0b7037c6d3/i-built-a-cli-that-generates-env-files-so-i-never-read-docs-again-3np5" target="_blank">
+         Dev.to
+        </a>
+       </p>
+      </div>
+      <div class="project-foot">
+       <span class="stack">
+        TypeScript · JavaScript
+       </span>
+       <a aria-label="View Envforge on GitHub" href="https://github.com/Jos3456/Envforge" target="_blank">
+        <span class="project-mark">
+         ↗
+        </span>
+       </a>
+      </div>
+     </article>
+    </div>
+   </section>
+   <section class="section wrap" id="sound">
+    <div class="section-head">
+     <div class="section-no mono">
+      04 / The other side
+     </div>
+     <div>
+      <h2 class="section-title">
+       Not everything
+       <br/>
+       needs a keyboard.
+      </h2>
+      <p class="section-intro">
+       A different kind of making — built around rhythm, feeling and the
+       joy of getting a sound or a sentence just right.
+      </p>
+     </div>
+    </div>
+    <div class="creative-stack">
+     <div class="music-panel reveal">
+      <div>
+       <span class="mono" style="color: var(--lime)">
+        Beyond the screen / DJ · Beatmaker
+       </span>
+       <h3>
+        <a href="https://www.bandlab.com/jox_xe" target="_blank">
+         Jøxxe<span style="color: var(--orange)">.</span>
+        </a>
+       </h3>
+       <p>
+        I play tropical house and EDM as Jøxxe, and make music in
+        <em>
+         BandLab
+        </em>
+        . I enjoy the process of creating, and the challenge of
+        making something that sounds good to me. I also enjoy sharing my
+        music with others, and seeing how they respond to it. I have a
+        growing collection of tracks, and I am always looking for new ways
+        to improve my skills and my sound.
+       </p>
+       <div class="creative-meta">
+        <span>Tropical house · EDM · BandLab production</span>
+        <span>·</span>
+        <a href="https://www.bandlab.com/jox_xe" target="_blank">Listen on BandLab ↗</a>
+       </div>
+      </div>
+      <div class="sound-orbit">
+       <div class="disc" id="vinylDisc" role="button" tabindex="0" title="Click or hover to spin Side B"></div>
+       <div class="disc-caption">
+        <div aria-hidden="true" class="eq-bar-wrap">
+         <span class="eq-bar"></span>
+         <span class="eq-bar"></span>
+         <span class="eq-bar"></span>
+         <span class="eq-bar"></span>
+         <span class="eq-bar"></span>
+        </div>
+        <span>Side B — always creating</span>
+       </div>
+      </div>
+     </div>
+     <div class="music-panel writing-panel reveal">
+      <div>
+       <span class="mono">
+        Imagination to Creative writing
+       </span>
+       <h3>
+        <a href="https://www.wattpad.com/user/Josephlol" target="_blank">
+         Josephlol<span style="color: var(--orange)">.</span>
+        </a>
+       </h3>
+       <p>
+        I write creative pieces as Josephlol, and share them on
+        <em>
+         Wattpad and Substack
+        </em>
+        . I enjoy the process of writing, and the challenge of
+        creating something that resonates with readers—exploring worlds,
+        human curiosity, and the quiet details between big moments.
+       </p>
+       <div class="creative-meta">
+        <a href="https://www.wattpad.com/user/Josephlol" target="_blank">
+         Read on Wattpad ↗
+        </a>
+        <span>·</span>
+        <a href="https://substack.com/@josephlol" target="_blank">
+         Subscribe on Substack ↗
+        </a>
+       </div>
+      </div>
+      <div class="manuscript-card">
+       <div class="manuscript-top">
+        <span class="mono" id="excerptLabel">NOTEBOOK SLIP 01 / 03</span>
+        <button class="next-excerpt" id="nextExcerpt" type="button">
+         Next note ↻
+        </button>
+       </div>
+       <p class="manuscript-quote" id="excerptText">
+        “Every good system—whether a line of code, a melody, or a story—starts as a question you refuse to stop asking.”
+       </p>
+       <span class="mono">— Josephlol, Field Margin</span>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="section wrap" id="contact" style="border: 0">
+    <div class="contact reveal">
+     <div>
+      <span class="mono" style="color: #1d2421; font-weight: bold">
+       05 / Open channel
+      </span>
+      <h2>
+       Have a good
+       <br/>
+       problem?
+      </h2>
+      <p>
+       For IT support, creative writing work, tutoring or a project that needs
+       building, let's talk. I'm interested in practical challenges and
+       useful collaborations.
+      </p>
+     </div>
+     <div class="contact-links">
+      <a class="contact-link" href="mailto:josephhkariukii@gmail.com">
+       <strong>Email ↗</strong>
+       <span>Direct</span>
+      </a>
+      <a class="contact-link" href="https://github.com/Jos3456" target="_blank">
+       GitHub ↗
+       <span>Code</span>
+      </a>
+      <a class="contact-link" href="https://www.linkedin.com/in/joseph-kariuki-9a144824b" target="_blank">
+       LinkedIn ↗
+       <span>Network</span>
+      </a>
+      <a class="contact-link" href="https://www.bandlab.com/jox_xe" target="_blank">
+       BandLab ↗
+       <span>Jøxxe</span>
+      </a>
+      <a class="contact-link" href="https://www.wattpad.com/user/Josephlol" target="_blank">
+       Wattpad ↗
+       <span>Stories</span>
+      </a>
+      <a class="contact-link" href="https://substack.com/@josephlol" target="_blank">
+       Substack ↗
+       <span>Essays</span>
+      </a>
+      <div class="contact-link" style="font-size: 13px">
+       Kitengela, Kenya
+       <span>
+        Based here
+       </span>
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="wrap">
+   <span>
+    © 2026 Joseph · Made with curiosity
+   </span>
+   <a class="back" href="#top">
+    Back to the beginning ↑
+   </a>
+   <span>
+    Still becoming.
+   </span>
+  </footer>
+  <script>
+   // Persistent Theme Toggle
+      const body = document.body,
+        theme = document.getElementById("themeToggle");
+
+      function applyTheme(isDark) {
+        body.classList.toggle("dark", isDark);
+        theme.textContent = isDark ? "☼ Light" : "◐ Theme";
+        document.querySelector('meta[name="theme-color"]').content = isDark
+          ? "#161b18"
+          : "#f1eee6";
+      }
+
+      const savedTheme = localStorage.getItem("joseph-theme");
+      if (savedTheme === "dark") applyTheme(true);
+
+      theme.addEventListener("click", () => {
+        const isDark = !body.classList.contains("dark");
+        applyTheme(isDark);
+        localStorage.setItem("joseph-theme", isDark ? "dark" : "light");
+      });
+
+      // Live Kitengela (EAT / UTC+3) Time
+      const localTimeEl = document.getElementById("localTime");
+      function updateKitengelaTime() {
+        try {
+          const now = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Africa/Nairobi",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }).format(new Date());
+          localTimeEl.textContent = `KITENGELA ${now} EAT`;
+        } catch {
+          localTimeEl.textContent = "EST. IN PROGRESS";
+        }
+      }
+      updateKitengelaTime();
+      setInterval(updateKitengelaTime, 30000);
+
+      // Mobile Hamburger Menu
+      const menuToggle = document.getElementById("menuToggle"),
+        mainNav = document.getElementById("mainNav");
+
+      function closeMenu() {
+        mainNav.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+
+      menuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = mainNav.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      mainNav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", closeMenu);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!mainNav.contains(e.target) && !menuToggle.contains(e.target)) {
+          closeMenu();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+      });
+
+      // Vinyl Disc Spin Toggle
+      const vinylDisc = document.getElementById("vinylDisc");
+      vinylDisc.addEventListener("click", () => {
+        vinylDisc.classList.toggle("spinning");
+      });
+
+      // Creative Writing Notebook Excerpt Cycler
+      const excerpts = [
+        "“Every good system—whether a line of code, a melody, or a story—starts as a question you refuse to stop asking.”",
+        "“Late-night debugging and writing fiction share the same secret: both are just untangling threads until the truth makes sense.”",
+        "“You don’t need a loud room to make something resonant; sometimes a quiet desk in Kitengela and a stubborn curiosity are enough.”",
+      ];
+      let excerptIdx = 0;
+      const excerptText = document.getElementById("excerptText"),
+        excerptLabel = document.getElementById("excerptLabel"),
+        nextExcerpt = document.getElementById("nextExcerpt");
+
+      nextExcerpt.addEventListener("click", () => {
+        excerptIdx = (excerptIdx + 1) % excerpts.length;
+        excerptText.textContent = excerpts[excerptIdx];
+        excerptLabel.textContent = `NOTEBOOK SLIP 0${excerptIdx + 1} / 0${excerpts.length}`;
+      });
+
+      // Project Filtering
+      const filters = [...document.querySelectorAll(".filter")],
+        cards = [...document.querySelectorAll(".project")],
+        count = document.getElementById("projectCount");
+      filters.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          filters.forEach((x) => x.classList.toggle("active", x === btn));
+          let n = 0;
+          cards.forEach((card) => {
+            const show =
+              btn.dataset.filter === "all" ||
+              card.dataset.category === btn.dataset.filter;
+            card.hidden = !show;
+            if (show) n++;
+          });
+          count.textContent =
+            String(n).padStart(2, "0") +
+            " projects / " +
+            (btn.dataset.filter === "all"
+              ? "selected work"
+              : btn.textContent.toLowerCase());
+        }),
+      );
+
+      // Scroll Reveal
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              observer.unobserve(e.target);
+            }
+          }),
+        { threshold: 0.12 },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+  </script>
+ </body>
+</html>
